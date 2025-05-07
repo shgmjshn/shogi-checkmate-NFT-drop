@@ -1,0 +1,39 @@
+{
+  "name": "shogi-checkmate-nft-drop",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "2.8.2",
+    "@emotion/react": "11.11.3",
+    "@emotion/styled": "11.11.0",
+    "@metaplex-foundation/js": "^0.20.1",
+    "@solana/wallet-adapter-base": "^0.9.23",
+    "@solana/wallet-adapter-react": "^0.15.35",
+    "@solana/wallet-adapter-react-ui": "^0.9.34",
+    "@solana/wallet-adapter-wallets": "^0.19.25",
+    "@solana/web3.js": "^1.98.2",
+    "framer-motion": "10.18.0",
+    "next": "14.0.4",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "typescript": "5.3.3"
+  },
+  "devDependencies": {
+    "@types/node": "20.11.0",
+    "@types/react": "18.2.47",
+    "@types/react-dom": "18.2.18",
+    "@typescript-eslint/eslint-plugin": "6.19.0",
+    "@typescript-eslint/parser": "6.19.0",
+    "eslint": "8.56.0",
+    "eslint-config-next": "14.0.4",
+    "eslint-config-prettier": "9.1.0",
+    "prettier": "3.2.4",
+    "ts-node": "10.9.2"
+  }
+}
