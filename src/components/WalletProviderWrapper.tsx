@@ -5,10 +5,10 @@ import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets';
 import { clusterApiUrl } from '@solana/web3.js';
-import { useMemo } from 'react';
+import { useMemo, type ReactNode } from 'react';
 import '@solana/wallet-adapter-react-ui/styles.css';
 
-export function WalletProviderWrapper({ children }: { children: React.ReactNode }) {
+export function WalletProviderWrapper({ children }: { children: ReactNode }) {
   const network = WalletAdapterNetwork.Devnet;
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
   const wallets = useMemo(() => [new PhantomWalletAdapter()], []);

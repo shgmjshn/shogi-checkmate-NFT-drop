@@ -17,10 +17,10 @@ import {
 import { Connection, PublicKey } from '@solana/web3.js';
 import { Metaplex } from '@metaplex-foundation/js';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { nfts } from '../data/nfts';
 import { NFT } from '../types/nft';
 import { mintNFT } from '../utils/mintNFT';
+import { WalletButton } from '../components/WalletButton';
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
@@ -29,6 +29,8 @@ export default function Home() {
   const wallet = useWallet();
 
   useEffect(() => {
+    if (!wallet) return;
+
     const checkWalletConnection = async () => {
       try {
         if (!wallet.connected) {
@@ -53,10 +55,10 @@ export default function Home() {
     };
 
     checkWalletConnection();
-  }, [wallet.connected, toast]);
+  }, [wallet, toast]);
 
   const handleMint = async () => {
-    if (!wallet.publicKey) {
+    if (!wallet?.publicKey) {
       toast({
         title: 'ウォレット接続が必要です',
         description: 'NFTをミントするにはウォレットを接続してください。',
@@ -121,7 +123,7 @@ export default function Home() {
     <Container maxW="container.xl" py={10}>
       <VStack spacing={8}>
         <HStack w="full" justify="flex-end">
-          <WalletMultiButton />
+          <WalletButton />
         </HStack>
 
         <Heading as="h1" size="2xl">
@@ -171,7 +173,7 @@ export default function Home() {
           onClick={handleMint}
           isLoading={isLoading}
           loadingText="ミント中..."
-          isDisabled={!wallet.publicKey || !selectedNFT}
+          isDisabled={!wallet?.publicKey || !selectedNFT}
         >
           NFTをミントする
         </Button>
