@@ -15,7 +15,13 @@ export function WalletProviderWrapper({ children }: { children: ReactNode }) {
 
   return (
     <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={wallets} autoConnect={true}>
+      <WalletProvider 
+        wallets={wallets} 
+        autoConnect={false}
+        onError={(error) => {
+          console.warn('ウォレット接続エラー:', error);
+        }}
+      >
         <WalletModalProvider>
           {children}
         </WalletModalProvider>

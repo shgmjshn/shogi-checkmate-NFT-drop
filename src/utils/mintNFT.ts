@@ -33,6 +33,10 @@ export const mintNFT = async (
         }
       }
 
+      // 新しいブロックハッシュを取得
+      const { blockhash } = await connection.getLatestBlockhash('confirmed');
+      await sleep(1000);
+
       const metaplex = new Metaplex(connection)
         .use(walletAdapterIdentity(wallet));
 
@@ -67,6 +71,7 @@ export const mintNFT = async (
       if (error instanceof Error) {
         if (error.message.includes('ブロックハッシュが無効')) {
           try {
+            // ウォレットの再接続を試みる
             await wallet.disconnect();
             await sleep(2000);
             await wallet.connect();
