@@ -34,13 +34,16 @@ export const mintNFT = async (
       }
 
       // 新しいブロックハッシュを取得
+      console.log('ブロックハッシュを取得中...');
       const { blockhash } = await connection.getLatestBlockhash('confirmed');
+      console.log('ブロックハッシュ取得成功:', blockhash);
       await sleep(1000);
 
       const metaplex = new Metaplex(connection)
         .use(walletAdapterIdentity(wallet));
 
       // NFTのメタデータを作成
+      console.log('メタデータをアップロード中...');
       const { uri } = await metaplex
         .nfts()
         .uploadMetadata({
@@ -50,8 +53,10 @@ export const mintNFT = async (
         }, {
           commitment: 'confirmed'
         });
+      console.log('メタデータのアップロード成功:', uri);
 
       // NFTをミント
+      console.log('NFTをミント中...');
       const { nft: mintedNFT } = await metaplex
         .nfts()
         .create({
@@ -63,15 +68,17 @@ export const mintNFT = async (
         }, {
           commitment: 'confirmed'
         });
+      console.log('NFTのミント成功:', mintedNFT.address.toString());
 
       return mintedNFT.address.toString();
     } catch (error) {
       console.error(`NFTのミント中にエラーが発生しました (試行 ${retries + 1}/${MAX_RETRIES}):`, error);
       
       if (error instanceof Error) {
+        // エラーの種類に応じた処理
         if (error.message.includes('ブロックハッシュが無効')) {
+          console.log('ブロックハッシュが無効なため、ウォレットの再接続を試みます...');
           try {
-            // ウォレットの再接続を試みる
             await wallet.disconnect();
             await sleep(2000);
             await wallet.connect();
@@ -86,8 +93,19 @@ export const mintNFT = async (
         }
         
         if (error.message.includes('ウォレットの接続が拒否されました')) {
-          throw error; // 接続拒否の場合は即座にエラーを投げる
+          throw new Error('ウォレットの接続が拒否されました。NFTをミントするにはウォレットの接続が必要です。');
         }
+
+        if (error.message.includes('timeout')) {
+          throw new Error('トランザクションがタイムアウトしました。ネットワークの状態を確認してください。');
+        }
+
+        if (error.message.includes('rate limit')) {
+          throw new Error('RPCのレート制限に達しました。しばらく待ってから再試行してください。');
+        }
+
+        // その他のエラー
+        throw new Error(`ミント処理中にエラーが発生しました: ${error.message}`);
       }
       
       if (retries === MAX_RETRIES - 1) {
@@ -99,5 +117,5 @@ export const mintNFT = async (
     }
   }
   
-  throw new Error('予期せぬエラーが発生しました');
+  throw new Error('予期せぬエラーが発生しました。詳細なエラー情報を確認してください。');
 }; 
